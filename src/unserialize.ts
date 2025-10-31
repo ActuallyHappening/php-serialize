@@ -50,9 +50,9 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
 
     if (parsedValue.toString() !== value) {
       if (!value.includes('.')) {
-        parsedValue = BigInt(value); // Only convert to BigInt if there's no decimal
+        parsedValue = BigInt(value) // Only convert to BigInt if there's no decimal
       } else {
-        parsedValue = parseFloat(value); // Ensure floats remain as float
+        parsedValue = parseFloat(value) // Ensure floats remain as float
       }
     }
 
@@ -63,10 +63,26 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     return value === '1'
   }
   if (type === 'string') {
-    return parser.getByLength('"', '"', length => parser.readAhead(length))
+    // this method doesn't provide a descriptive enough error message
+    // return parser.getByLength('"', '"', length => parser.readAhead(length))
+
+    const length = this.getByLength()
+    this.seekExpected(`:"`)
+
+    const initialIndex = parser.index
+    const uncheckedString = parser.readUntil(`"`)
+    const finalIndex = parser.index
+
+    if (uncheckedString.length !== length) {
+      throw new Error(
+        `String length in encoding declared to be ${length} but was actually ${uncheckedString.length}, string was "${uncheckedString}" from index ${initialIndex} to ${finalIndex}`,
+        { cause: parser.error(`String length mismatch`) },
+      )
+    }
+    return uncheckedString
   }
   if (type === 'array-object') {
-    const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
+    const pairs = parser.getByLength('{', '}', (length) => unserializePairs(parser, length, scope, options))
 
     const isArray = pairs.every((item, idx) => isInteger(item.key) && idx === item.key)
     const result = isArray ? [] : {}
@@ -76,9 +92,9 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     return result
   }
   if (type === 'notserializable-class') {
-    const name = parser.getByLength('"', '"', length => parser.readAhead(length))
+    const name = parser.getByLength('"', '"', (length) => parser.readAhead(length))
     parser.seekExpected(':')
-    const pairs = parser.getByLength('{', '}', length => unserializePairs(parser, length, scope, options))
+    const pairs = parser.getByLength('{', '}', (length) => unserializePairs(parser, length, scope, options))
     const result = getClassReference(name, scope, options.strict)
 
     const PREFIX_PRIVATE = `\u0000${name}\u0000`
@@ -97,9 +113,9 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     return result
   }
   if (type === 'serializable-class') {
-    const name = parser.getByLength('"', '"', length => parser.readAhead(length))
+    const name = parser.getByLength('"', '"', (length) => parser.readAhead(length))
     parser.seekExpected(':')
-    const payload = parser.getByLength('{', '}', length => parser.readAhead(length))
+    const payload = parser.getByLength('{', '}', (length) => parser.readAhead(length))
     const result = getClassReference(name, scope, options.strict)
     if (!(result instanceof __PHP_Incomplete_Class)) {
       invariant(result.unserialize, `unserialize not found on class when processing '${name}'`)
