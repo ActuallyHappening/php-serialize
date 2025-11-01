@@ -1,5 +1,15 @@
 # PHP-Serialize
 
+## < Fork >
+
+This fork adds better error messages for string decoding.
+
+Also, to get this to be usable as a git URL dependency:
+- `yarn build:*` was replaced with `npm run build:*` in the package.json,
+which avoided needing `yarn` installed into devDependencies
+
+## </ Fork >
+
 It also supports `Serializable` objects decode. Here's how you can use them.
 
 #### Installation
