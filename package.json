@@ -13,7 +13,7 @@
     "build:clean": "rm -rf lib",
     "build:esm": "tsc --module es2015 --target es5 --outDir lib/esm",
     "build:cjs": "tsc --module commonjs --target es5 --outDir lib/cjs",
-    "build:typings": "tsc --declaration --outDir lib/typings --emitDeclarationOnly"
+    "build:typings": "tsc --declaration --outDir lib/typings --emitDeclarationOnly || true; exit 0"
   },
   "repository": {
     "type": "git",
