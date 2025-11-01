@@ -82,8 +82,6 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     const finalIndex = parser.index
     parser.readAhead(1) // read the " quotation mark
 
-    console.log(`INTERNAL`, length, uncheckedString)
-
     if (uncheckedString.length !== length) {
       throw new Error(
         `String length in encoding declared to be ${length} but was actually ${uncheckedString.length}, string was "${uncheckedString}" from index ${initialIndex} to ${finalIndex}`,
