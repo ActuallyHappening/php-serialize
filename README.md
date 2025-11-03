@@ -5,8 +5,13 @@
 This fork adds better error messages for string decoding.
 
 Also, to get this to be usable as a git URL dependency:
-- `yarn build:*` was replaced with `npm run build:*` in the package.json,
-which avoided needing `yarn` installed into devDependencies
+- ~~`yarn build:*` was replaced with `npm run build:*` in the package.json,
+which avoided needing `yarn` installed into devDependencies~~
+- `yarn` was added into devDependencies
+- `npm i --ignore-scripts` was added into the lifecycle prepare 
+
+`npm` is very annoying with lifecycle scripts. I never want to touch this
+feature of `npm` again, but this project depends on them
 
 ## </ Fork >
 
