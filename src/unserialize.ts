@@ -84,11 +84,16 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
 
     if (uncheckedString.length !== length) {
       const errorUrl = 'https://github.com/ActuallyHappening/php-serialize/blob/main/ERRORS.md#err_bad_str_len'
-      throw new Error(
+      const err = new Error(
         `String length in encoding declared to be ${length} but was actually ${uncheckedString.length}, string was "${uncheckedString}" from index ${initialIndex} to ${finalIndex} (${errorUrl})`,
         // @ts-ignore
         { cause: parser.error(`String length mismatch`) },
       )
+      if (options.strict) {
+        throw err
+      } else {
+        console.error(err, `(as parsing is not strict, this isn't a fatal error)`)
+      }
     }
     return uncheckedString
   }
