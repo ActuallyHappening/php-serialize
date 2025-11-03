@@ -83,8 +83,9 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
     parser.readAhead(1) // read the " quotation mark
 
     if (uncheckedString.length !== length) {
+      const errorUrl = 'https://github.com/ActuallyHappening/php-serialize/blob/main/ERRORS.md#err_bad_str_len'
       throw new Error(
-        `String length in encoding declared to be ${length} but was actually ${uncheckedString.length}, string was "${uncheckedString}" from index ${initialIndex} to ${finalIndex}`,
+        `String length in encoding declared to be ${length} but was actually ${uncheckedString.length}, string was "${uncheckedString}" from index ${initialIndex} to ${finalIndex} (${errorUrl})`,
         // @ts-ignore
         { cause: parser.error(`String length mismatch`) },
       )
