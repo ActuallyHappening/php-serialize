@@ -145,13 +145,7 @@ function unserializeItem(parser: Parser, scope: Record<string, any>, options: Op
   throw new Error(`Invalid type '${type}' encounterd while unserializing`)
 }
 
-function unserialize(
-  item: string | Buffer,
-  scope: Record<string, any> = {},
-  // FIXME: This shouldn't be the default
-  // See https://mfdc.slack.com/archives/G014GD84C2W/p1762133085114819
-  givenOptions: Partial<Options> = { strict: false },
-): any {
+function unserialize(item: string | Buffer, scope: Record<string, any> = {}, givenOptions: Partial<Options> = {}): any {
   const options: any = { ...givenOptions }
   if (typeof options.strict === 'undefined') {
     options.strict = true
